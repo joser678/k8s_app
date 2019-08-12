@@ -1,0 +1,43 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: frstocks-deployment
+  namespace: frstocks-ns
+  labels:
+    app: frstocks
+    env: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frstocks
+      env: dev
+  template:
+    metadata:
+      labels:
+        app: frstocks
+        env: dev
+    spec:
+      containers:
+      - name: frstocks
+        image: <app>
+        env:
+        - name: SYMBOL
+          valueFrom:
+            configMapKeyRef:
+              name: fr-configmap
+              key: SYMBOL
+        - name: NDAYS
+          valueFrom:
+            configMapKeyRef:
+              name: fr-configmap
+              key: NDAYS
+        resources:
+          limits:
+            cpu: 1
+            memory: 1.2Gi
+          requests:
+            cpu: "350m"
+            memory: "300m"
+        ports:
+        - containerPort: 80
